@@ -11,11 +11,13 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
 import com.ubaya.todo.R
+import com.ubaya.todo.databinding.TodoItemLayoutBinding
 import com.ubaya.todo.viewmodel.DetailTodoViewModel
 import kotlinx.android.synthetic.main.fragment_create_todo.*
 
 class EditTodoFragment : Fragment() {
     private lateinit var viewModel:DetailTodoViewModel
+    //private lateinit var dataBinding:
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -49,6 +51,7 @@ class EditTodoFragment : Fragment() {
 
     private fun observeViewModel() {
         viewModel.todoLD.observe(viewLifecycleOwner, Observer {
+            //d
             txtTitle.setText(it.title)
             txtNotes.setText(it.notes)
 
