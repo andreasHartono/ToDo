@@ -3,6 +3,7 @@ package com.ubaya.todo.view
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import androidx.navigation.Navigation
 import androidx.navigation.ui.NavigationUI
 import com.ubaya.todo.R
@@ -18,6 +19,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onSupportNavigateUp(): Boolean {
-        return navController.navigateUp()
+        return NavigationUI.navigateUp(navController,null)
     }
 }

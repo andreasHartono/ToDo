@@ -7,23 +7,29 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.RadioButton
 import android.widget.Toast
+import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
 import com.ubaya.todo.R
+import com.ubaya.todo.databinding.FragmentEditTodoBinding
 import com.ubaya.todo.databinding.TodoItemLayoutBinding
+import com.ubaya.todo.model.Todo
 import com.ubaya.todo.viewmodel.DetailTodoViewModel
 import kotlinx.android.synthetic.main.fragment_create_todo.*
 
-class EditTodoFragment : Fragment() {
+class EditTodoFragment : Fragment(), RadioClickListener, SaveChangesListener {
     private lateinit var viewModel:DetailTodoViewModel
+    private lateinit var dataBinding: FragmentEditTodoBinding
     //private lateinit var dataBinding:
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_create_todo, container, false)
+        dataBinding = DataBindingUtil.inflate<FragmentEditTodoBinding>(
+                inflater,R.layout.fragment_edit_todo,container,false)
+        return dataBinding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -31,12 +37,15 @@ class EditTodoFragment : Fragment() {
         viewModel = ViewModelProvider(this).get(DetailTodoViewModel::class.java)
         val uuid = EditTodoFragmentArgs.fromBundle(requireArguments()).uuid
         viewModel.fetch(uuid)
+
+        dataBinding.radiolistener = this
+        dataBinding.listener = this
         observeViewModel()
 
-        textJudul.text = "Edit Todo"
-        buttonAdd.text = "Save Changes"
+//        textJudul.text = "Edit Todo"
+//        buttonAdd.text = "Save Changes"
 
-        buttonAdd.setOnClickListener {
+        /*buttonAdd.setOnClickListener {
             val radio = view?.findViewById<RadioButton>(radioGroupPriority.checkedRadioButtonId)
             viewModel.update(
                 uuid,
@@ -46,20 +55,30 @@ class EditTodoFragment : Fragment() {
             )
             Toast.makeText(view.context, "Todo updated", Toast.LENGTH_SHORT).show()
             Navigation.findNavController(it).popBackStack()
-        }
+        }*/
     }
 
     private fun observeViewModel() {
         viewModel.todoLD.observe(viewLifecycleOwner, Observer {
+            dataBinding.todo = it
             //d
-            txtTitle.setText(it.title)
-            txtNotes.setText(it.notes)
-
-            when(it.priority) {
-                1 -> radioLow.isChecked = true
-                2 -> radioMedium.isChecked = true
-                else -> radioHigh.isChecked = true
-            }
+//            txtTitle.setText(it.title)
+//            txtNotes.setText(it.notes)
+//
+//            when(it.priority) {
+//                1 -> radioLow.isChecked = true
+//                2 -> radioMedium.isChecked = true
+//                else -> radioHigh.isChecked = true
+//            }
         })
+    }
+
+    override fun onRadioClick(v: View, priority: Int, obj: Todo) {
+        obj.priority = v.tag.toString().toInt()
+    }
+
+    override fun onSaveChanges(v: View, obj: Todo) {
+        viewModel.update(obj.uuid, obj.title, obj.notes, obj.priority)
+        Toast.makeText(v.context,"Todo Updated",Toast.LENGTH_SHORT).show()
     }
 }

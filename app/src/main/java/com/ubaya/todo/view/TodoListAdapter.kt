@@ -14,7 +14,7 @@ import java.util.ArrayList
 import kotlinx.android.synthetic.main.todo_item_layout.view.*
 
 class TodoListAdapter(val todoList:ArrayList<Todo>, val adapterOnClick : (Todo) -> Unit)
-    :RecyclerView.Adapter<TodoListAdapter.TodoViewHolder>(), TodoCheckedChangeListener {
+    :RecyclerView.Adapter<TodoListAdapter.TodoViewHolder>(), TodoCheckedChangeListener, TodoEditClick {
     class TodoViewHolder(var view:TodoItemLayoutBinding): RecyclerView.ViewHolder(view.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TodoViewHolder {
@@ -29,6 +29,7 @@ class TodoListAdapter(val todoList:ArrayList<Todo>, val adapterOnClick : (Todo) 
     {
         holder.view.todo = todoList[position]
         holder.view.listener = this
+        holder.view.editListener = this
 //        holder.view.checkBox.text = todoList[position].title
 //        holder.view.checkBox.setOnCheckedChangeListener { compoundButton, b ->
 //            adapterOnClick(todoList[position])
@@ -53,5 +54,10 @@ class TodoListAdapter(val todoList:ArrayList<Todo>, val adapterOnClick : (Todo) 
 
     override fun onCheckChanged(cb: CompoundButton, isChecked: Boolean, obj: Todo) {
         if(isChecked) adapterOnClick(obj)
+    }
+
+    override fun onTodoEditClick(v: View) {
+        val action = TodoListFragmentDirections.actionEditTodo(v.tag.toString().toInt())
+        Navigation.findNavController(v).navigate(action)
     }
 }

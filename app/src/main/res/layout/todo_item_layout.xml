@@ -5,6 +5,7 @@
     <data>
         <variable name="todo" type="com.ubaya.todo.model.Todo" />
         <variable name="listener" type="com.ubaya.todo.view.TodoCheckedChangeListener" />
+        <variable name="editListener" type="com.ubaya.todo.view.TodoEditClick" />
     </data>
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -27,6 +28,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
+            android:tag="@{todo.uuid}"
+            android:onClick="@{editListener.onTodoEditClick}"
             app:layout_constraintBottom_toBottomOf="@+id/checkBox"
             app:layout_constraintEnd_toEndOf="@+id/checkBox"
             app:layout_constraintTop_toTopOf="@+id/checkBox"
