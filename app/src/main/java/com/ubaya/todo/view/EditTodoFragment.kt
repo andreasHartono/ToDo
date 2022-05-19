@@ -37,25 +37,23 @@ class EditTodoFragment : Fragment(), RadioClickListener, SaveChangesListener {
         viewModel = ViewModelProvider(this).get(DetailTodoViewModel::class.java)
         val uuid = EditTodoFragmentArgs.fromBundle(requireArguments()).uuid
         viewModel.fetch(uuid)
-
+        observeViewModel()
         dataBinding.radiolistener = this
         dataBinding.listener = this
-        observeViewModel()
-
 //        textJudul.text = "Edit Todo"
 //        buttonAdd.text = "Save Changes"
 
-        /*buttonAdd.setOnClickListener {
-            val radio = view?.findViewById<RadioButton>(radioGroupPriority.checkedRadioButtonId)
-            viewModel.update(
-                uuid,
-                txtTitle.text.toString(),
-                txtNotes.text.toString(),
-                radio.tag.toString().toInt()
-            )
-            Toast.makeText(view.context, "Todo updated", Toast.LENGTH_SHORT).show()
-            Navigation.findNavController(it).popBackStack()
-        }*/
+//        buttonAdd.setOnClickListener {
+//            val radio = view?.findViewById<RadioButton>(radioGroupPriority.checkedRadioButtonId)
+//            viewModel.update(
+//                uuid,
+//                txtTitle.text.toString(),
+//                txtNotes.text.toString(),
+//                radio.tag.toString().toInt()
+//            )
+//            Toast.makeText(view.context, "Todo updated", Toast.LENGTH_SHORT).show()
+//            Navigation.findNavController(it).popBackStack()
+//        }
     }
 
     private fun observeViewModel() {
@@ -74,11 +72,12 @@ class EditTodoFragment : Fragment(), RadioClickListener, SaveChangesListener {
     }
 
     override fun onRadioClick(v: View, priority: Int, obj: Todo) {
-        obj.priority = v.tag.toString().toInt()
+        obj.priority = priority
     }
 
     override fun onSaveChanges(v: View, obj: Todo) {
         viewModel.update(obj.uuid, obj.title, obj.notes, obj.priority)
         Toast.makeText(v.context,"Todo Updated",Toast.LENGTH_SHORT).show()
+        Navigation.findNavController(v).popBackStack()
     }
 }
